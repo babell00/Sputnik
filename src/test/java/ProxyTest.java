@@ -11,6 +11,13 @@ public class ProxyTest {
         BeanFactory bf = BeanFactoryImpl.getBeanFactory();
 
         bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.dupa");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.com.kuba");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+
 
         Calculator cal1 = (Calculator) bf.getBean("Add");
         Calculator cal2 = bf.getBean("Calculator", Calculator.class);
@@ -23,11 +30,6 @@ public class ProxyTest {
         say1.sayHello("Z metody testowej");
     }
 
-    @Test
-    public void test2() throws IllegalAccessException, InstantiationException {
-
-
-    }
 
 
 }

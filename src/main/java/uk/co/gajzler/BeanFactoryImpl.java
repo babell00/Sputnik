@@ -1,5 +1,8 @@
 package uk.co.gajzler;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.sun.deploy.util.StringUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -9,24 +12,31 @@ import org.reflections.util.FilterBuilder;
 import uk.co.gajzler.annotation.ClassObject;
 import uk.co.gajzler.annotation.MyInject;
 import uk.co.gajzler.exception.CannotFindBeanException;
+import uk.co.gajzler.log.SLogger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BeanFactoryImpl implements BeanFactory {
 
+    private static final SLogger log = SLogger.getLogger(BeanFactoryImpl.class);
+
     private static BeanFactoryImpl instance;
     private Map<String, Object> beanMap;
-    private List<String> packageList;
+    private Set<String> packageList;
 
 
     private BeanFactoryImpl() {
-        beanMap = new HashMap<String, Object>();
-        packageList = new ArrayList<String>();
+        beanMap = Maps.newHashMap();
+        packageList = Sets.newHashSet();
     }
 
     public static BeanFactoryImpl getBeanFactory() {
+        log.info("Instantiating BeanFactory");
         if (instance == null)
             instance = new BeanFactoryImpl();
         return instance;
@@ -34,8 +44,12 @@ public class BeanFactoryImpl implements BeanFactory {
 
     @Override
     public void addPackageToScan(String packageName) {
-        packageList.add(packageName);
-        findBeans();
+        log.info("Add package to scan : {0}", packageName);
+        boolean isAdded = packageList.add(packageName);
+        if (isAdded)
+            findBeans();
+        else
+            log.info("Package : {0} have been already added.", packageName);
     }
 
     @Override
@@ -46,10 +60,10 @@ public class BeanFactoryImpl implements BeanFactory {
             try {
                 next.set(ob, beanMap.get(myInject.inject()));
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                log.error("{0}", e);
             }
         }
-
+        log.info("Getting bean : {0}", ob.getClass().getName());
         return ob;
     }
 
@@ -60,6 +74,8 @@ public class BeanFactoryImpl implements BeanFactory {
     }
 
     private void findBeans() {
+        log.info("Scaning packages : [{0}]", StringUtils.join(packageList, ", "));
+
         List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
         classLoadersList.add(ClasspathHelper.contextClassLoader());
         classLoadersList.add(ClasspathHelper.staticClassLoader());
@@ -85,12 +101,13 @@ public class BeanFactoryImpl implements BeanFactory {
                     try {
                         object = clazz.newInstance();
                     } catch (InstantiationException e) {
-                        e.printStackTrace();
+                        log.error("{0}", e);
                     } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        log.error("{0}", e);
                     }
                     if (object == null)
                         throw new CannotFindBeanException();
+                    log.info("Registering bean : {0}", object.getClass().getName());
                     beanMap.put(classObject.name(), object);
                 }
             }
