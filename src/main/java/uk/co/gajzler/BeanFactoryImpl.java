@@ -1,5 +1,6 @@
 package uk.co.gajzler;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sun.deploy.util.StringUtils;
@@ -9,8 +10,8 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import uk.co.gajzler.annotation.ClassObject;
-import uk.co.gajzler.annotation.MyInject;
+import uk.co.gajzler.annotation.Bean;
+import uk.co.gajzler.annotation.InjectBean;
 import uk.co.gajzler.exception.CannotFindBeanException;
 import uk.co.gajzler.log.SLogger;
 
@@ -56,9 +57,10 @@ public class BeanFactoryImpl implements BeanFactory {
     public Object getBean(String name) {
         Object ob = beanMap.get(name);
         for (Field next : ob.getClass().getDeclaredFields()) {
-            MyInject myInject = next.getAnnotation(MyInject.class);
+            next.setAccessible(true);
+            InjectBean myInject = next.getAnnotation(InjectBean.class);
             try {
-                next.set(ob, beanMap.get(myInject.inject()));
+                next.set(ob, beanMap.get(myInject.beanName()));
             } catch (IllegalAccessException e) {
                 log.error("{0}", e);
             }
@@ -71,6 +73,11 @@ public class BeanFactoryImpl implements BeanFactory {
     public <T> T getBean(String name, Class<T> type) {
         Object object = getBean(name);
         return type.cast(object);
+    }
+
+    @Override
+    public List<String> registeredBeans() {
+        return Lists.newArrayList(beanMap.keySet());
     }
 
     private void findBeans() {
@@ -94,8 +101,8 @@ public class BeanFactoryImpl implements BeanFactory {
 
         for (Class clazz : allClasses) {
             if (!clazz.isInterface()) {
-                Annotation annotation = clazz.getAnnotation(ClassObject.class);
-                ClassObject classObject = (ClassObject) annotation;
+                Annotation annotation = clazz.getAnnotation(Bean.class);
+                Bean classObject = (Bean) annotation;
                 if (classObject != null) {
                     Object object = null;
                     try {
@@ -108,7 +115,12 @@ public class BeanFactoryImpl implements BeanFactory {
                     if (object == null)
                         throw new CannotFindBeanException();
                     log.info("Registering bean : {0}", object.getClass().getName());
-                    beanMap.put(classObject.name(), object);
+
+                    String beanName = classObject.name();
+                    if("".equals(beanName))
+                        beanMap.put(clazz.getSimpleName(),object);
+                    else
+                        beanMap.put(beanName, object);
                 }
             }
         }

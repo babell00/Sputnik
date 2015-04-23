@@ -1,8 +1,8 @@
 package uk.co.gajzler.test;
 
-import uk.co.gajzler.annotation.ClassObject;
+import uk.co.gajzler.annotation.Bean;
 
-@ClassObject(name= "myClass")
+@Bean(name= "myClass")
 public class MyClass {
     private String name;
 

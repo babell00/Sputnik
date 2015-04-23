@@ -1,24 +1,25 @@
 package uk.co.gajzler.test;
 
-import uk.co.gajzler.annotation.ClassObject;
-import uk.co.gajzler.annotation.MyInject;
+import uk.co.gajzler.annotation.Bean;
+import uk.co.gajzler.annotation.InjectBean;
 
-@ClassObject(name = "Calculator")
+@Bean(name = "Calculator")
 public class CalculatorImpl implements Calculator {
 
-    @MyInject(inject = "say")
-    public SayHello say;
 
-    @MyInject(inject = "myClass")
-    public MyClass myClass;
+    @InjectBean(beanName = "say")
+    private SayHello say;
+
+    @InjectBean(beanName = "myClass")
+    private MyClass myClass;
 
     @Override
     public void calculate(int a, int b) {
-        System.out.print(getClass().getAnnotation(ClassObject.class).name());
+        System.out.print(getClass().getAnnotation(Bean.class).name());
         System.out.println(" - " + a + " + " + b + " = " + (a + b));
 
         myClass.getName();
 
-        say.sayHello("Z klasy po inject");
+        say.sayHello("Z klasy po beanName");
     }
 }

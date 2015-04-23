@@ -2,7 +2,9 @@ import org.junit.Test;
 import uk.co.gajzler.BeanFactoryImpl;
 import uk.co.gajzler.test.Calculator;
 import uk.co.gajzler.BeanFactory;
+import uk.co.gajzler.test.NoNameTest;
 import uk.co.gajzler.test.SayHello;
+
 
 public class ProxyTest {
 
@@ -28,6 +30,11 @@ public class ProxyTest {
         cal2.calculate(21,8);
 
         say1.sayHello("Z metody testowej");
+
+        System.out.println(bf.registeredBeans());
+
+        NoNameTest p = bf.getBean("NoNameTest",NoNameTest.class);
+        p.doit();
     }
 
 

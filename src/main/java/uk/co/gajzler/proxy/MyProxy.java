@@ -6,7 +6,7 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import uk.co.gajzler.annotation.ClassObject;
+import uk.co.gajzler.annotation.Bean;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -80,8 +80,8 @@ public class MyProxy implements InvocationHandler {
         Set<Class<? extends Object>> allClasses = reflections.getSubTypesOf(Object.class);
         for (Class clazz : allClasses) {
             if (!clazz.isInterface()) {
-                Annotation annotation = clazz.getAnnotation(ClassObject.class);
-                ClassObject classObject = (ClassObject) annotation;
+                Annotation annotation = clazz.getAnnotation(Bean.class);
+                Bean classObject = (Bean) annotation;
                 if (classObject != null) {
                     beanMap.put(classObject.name(),clazz);
                 }
