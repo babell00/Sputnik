@@ -100,6 +100,7 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
+
 # Target folder
 target/
 
