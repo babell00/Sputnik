@@ -24,9 +24,21 @@ public class BeanContainerImpl implements BeanContainer{
     }
 
     @Override
+    public void addBean(Class beanClass) {
+        log.info("Registering bean : {0}", beanClass);
+        noInstantiatedBeans.put(beanClass.getSimpleName(), beanClass);
+    }
+
+    @Override
     public void addBean(String beanName, Class beanClass) {
         log.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanName, beanClass);
+    }
+
+    @Override
+    public void addBeans(Map<String, Class> beanClass) {
+        log.debug("Registering beans : {0}", beanClass.size());
+        noInstantiatedBeans.putAll(beanClass);
     }
 
     @Override
