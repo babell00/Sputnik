@@ -6,7 +6,7 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import uk.co.gajzler.annotation.Bean;
+import uk.co.gajzler.annotations.Bean;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;

@@ -1,7 +1,7 @@
 package uk.co.gajzler.test;
 
-import uk.co.gajzler.annotation.Bean;
-import uk.co.gajzler.annotation.InjectBean;
+import uk.co.gajzler.annotations.Bean;
+import uk.co.gajzler.annotations.InjectBean;
 
 @Bean(name = "Calculator")
 public class CalculatorImpl implements Calculator {

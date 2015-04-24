@@ -1,12 +1,13 @@
-package uk.co.gajzler.annotation;
+package uk.co.gajzler.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Bean {
-    public String name() default "";
+public @interface InjectBean {
+    public String beanName();
+
 }

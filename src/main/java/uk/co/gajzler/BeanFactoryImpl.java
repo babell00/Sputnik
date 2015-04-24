@@ -1,7 +1,5 @@
 package uk.co.gajzler;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sun.deploy.util.StringUtils;
 import org.reflections.Reflections;
@@ -10,37 +8,35 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import uk.co.gajzler.annotation.Bean;
-import uk.co.gajzler.annotation.InjectBean;
-import uk.co.gajzler.exception.CannotFindBeanException;
+import uk.co.gajzler.annotations.Bean;
+import uk.co.gajzler.annotations.InjectBean;
+import uk.co.gajzler.exceptions.CannotFindBeanException;
 import uk.co.gajzler.log.SLogger;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
 import java.util.Set;
 
 public class BeanFactoryImpl implements BeanFactory {
 
     private static final SLogger log = SLogger.getLogger(BeanFactoryImpl.class);
 
-    private static BeanFactoryImpl instance;
-    private Map<String, Object> beanMap;
+    private static final BeanFactoryImpl INSTANCE = new BeanFactoryImpl();
+    //private Map<String, Object> beanMap;
     private Set<String> packageList;
+    private BeanContainer beanContainer;
 
 
     private BeanFactoryImpl() {
-        beanMap = Maps.newHashMap();
+        beanContainer = new BeanContainer();
         packageList = Sets.newHashSet();
     }
 
     public static BeanFactoryImpl getBeanFactory() {
-        log.info("Instantiating BeanFactory");
-        if (instance == null)
-            instance = new BeanFactoryImpl();
-        return instance;
+        return INSTANCE;
     }
 
     @Override
@@ -55,12 +51,12 @@ public class BeanFactoryImpl implements BeanFactory {
 
     @Override
     public Object getBean(String name) {
-        Object ob = beanMap.get(name);
+        Object ob = beanContainer.getBean(name);
         for (Field next : ob.getClass().getDeclaredFields()) {
             next.setAccessible(true);
             InjectBean myInject = next.getAnnotation(InjectBean.class);
             try {
-                next.set(ob, beanMap.get(myInject.beanName()));
+                next.set(ob, beanContainer.getBean(myInject.beanName()));
             } catch (IllegalAccessException e) {
                 log.error("{0}", e);
             }
@@ -77,7 +73,7 @@ public class BeanFactoryImpl implements BeanFactory {
 
     @Override
     public List<String> registeredBeans() {
-        return Lists.newArrayList(beanMap.keySet());
+        return beanContainer.getRegisteredBeanNames();
     }
 
     private void findBeans() {
@@ -118,9 +114,9 @@ public class BeanFactoryImpl implements BeanFactory {
 
                     String beanName = classObject.name();
                     if("".equals(beanName))
-                        beanMap.put(clazz.getSimpleName(),object);
+                        beanContainer.addBean(clazz.getSimpleName(), object);
                     else
-                        beanMap.put(beanName, object);
+                        beanContainer.addBean(beanName, object);
                 }
             }
         }

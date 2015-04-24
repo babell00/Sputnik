@@ -1,6 +1,6 @@
 package uk.co.gajzler.test;
 
-import uk.co.gajzler.annotation.Bean;
+import uk.co.gajzler.annotations.Bean;
 
 @Bean(name ="Add")
 public class AddImpl implements Calculator {

@@ -1,4 +1,4 @@
-package uk.co.gajzler.exception;
+package uk.co.gajzler.exceptions;
 
 public class CannotFindBeanException extends RuntimeException {
 }
