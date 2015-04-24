@@ -17,7 +17,6 @@ public class CalculatorImpl implements Calculator {
     public void calculate(int a, int b) {
         System.out.print(getClass().getAnnotation(Bean.class).name());
         System.out.println(" - " + a + " + " + b + " = " + (a + b));
-
         myClass.getName();
 
         say.sayHello("Z klasy po beanName");

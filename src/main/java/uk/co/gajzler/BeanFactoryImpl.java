@@ -1,5 +1,6 @@
 package uk.co.gajzler;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.sun.deploy.util.StringUtils;
 import org.reflections.Reflections;
@@ -10,7 +11,7 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import uk.co.gajzler.annotations.Bean;
 import uk.co.gajzler.annotations.InjectBean;
-import uk.co.gajzler.exceptions.CannotFindBeanException;
+import uk.co.gajzler.container.BeanContainerImpl;
 import uk.co.gajzler.log.SLogger;
 
 import java.lang.annotation.Annotation;
@@ -25,13 +26,12 @@ public class BeanFactoryImpl implements BeanFactory {
     private static final SLogger log = SLogger.getLogger(BeanFactoryImpl.class);
 
     private static final BeanFactoryImpl INSTANCE = new BeanFactoryImpl();
-    //private Map<String, Object> beanMap;
     private Set<String> packageList;
-    private BeanContainer beanContainer;
+    private BeanContainerImpl beanContainer;
 
 
     private BeanFactoryImpl() {
-        beanContainer = new BeanContainer();
+        beanContainer = new BeanContainerImpl();
         packageList = Sets.newHashSet();
     }
 
@@ -77,9 +77,9 @@ public class BeanFactoryImpl implements BeanFactory {
     }
 
     private void findBeans() {
-        log.info("Scaning packages : [{0}]", StringUtils.join(packageList, ", "));
+        log.info("Scanning packages : [{0}]", StringUtils.join(packageList, ", "));
 
-        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
+        List<ClassLoader> classLoadersList = Lists.newLinkedList() ;
         classLoadersList.add(ClasspathHelper.contextClassLoader());
         classLoadersList.add(ClasspathHelper.staticClassLoader());
 
@@ -100,26 +100,13 @@ public class BeanFactoryImpl implements BeanFactory {
                 Annotation annotation = clazz.getAnnotation(Bean.class);
                 Bean classObject = (Bean) annotation;
                 if (classObject != null) {
-                    Object object = null;
-                    try {
-                        object = clazz.newInstance();
-                    } catch (InstantiationException e) {
-                        log.error("{0}", e);
-                    } catch (IllegalAccessException e) {
-                        log.error("{0}", e);
-                    }
-                    if (object == null)
-                        throw new CannotFindBeanException();
-                    log.info("Registering bean : {0}", object.getClass().getName());
-
                     String beanName = classObject.name();
                     if("".equals(beanName))
-                        beanContainer.addBean(clazz.getSimpleName(), object);
+                        beanContainer.addBean(clazz.getSimpleName(), clazz);
                     else
-                        beanContainer.addBean(beanName, object);
+                        beanContainer.addBean(beanName, clazz);
                 }
             }
         }
     }
-
 }
