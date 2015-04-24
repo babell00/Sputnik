@@ -14,7 +14,7 @@ public class BeanContainerImpl implements BeanContainer {
 
     private static final SLogger LOG = SLogger.getLogger(BeanContainerImpl.class);
 
-    private Map<String, Class<?>> noInstantiatedBeans;
+    private Map<String, Class> noInstantiatedBeans;
     private Map<String, Object> instantiatedBeans;
 
     public BeanContainerImpl() {
@@ -24,19 +24,19 @@ public class BeanContainerImpl implements BeanContainer {
     }
 
     @Override
-    public void addBean(Class<?> beanClass) {
+    public void addBean(Class beanClass) {
         LOG.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanClass.getSimpleName(), beanClass);
     }
 
     @Override
-    public void addBean(String beanName, Class<?> beanClass) {
+    public void addBean(String beanName, Class beanClass) {
         LOG.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanName, beanClass);
     }
 
     @Override
-    public void addBeans(Map<String, Class<?>> beanClass) {
+    public void addBeans(Map<String, Class> beanClass) {
         LOG.debug("Registering beans : {0}", beanClass.size());
         noInstantiatedBeans.putAll(beanClass);
     }
@@ -88,7 +88,7 @@ public class BeanContainerImpl implements BeanContainer {
         instantiatedBeans.put(beanName, object);
     }
 
-    private class AsteriskFunction implements Function<String, String> {
+    private static class AsteriskFunction implements Function<String, String> {
         @Nullable
         @Override
         public String apply(String o) {

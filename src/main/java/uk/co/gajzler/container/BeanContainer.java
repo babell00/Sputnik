@@ -8,8 +8,8 @@ import java.util.Map;
  */
 public interface BeanContainer {
     public void addBean(Class<?> beanClass);
-    public void addBean(String beanName, Class<?> beanClass);
-    public void addBeans(Map<String, Class<?>> beanClass);
+    public void addBean(String beanName, Class beanClass);
+    public void addBeans(Map<String, Class> beanClass);
     public Object getBean(String beanName);
     public List<String> getRegisteredBeanNames();
 }
