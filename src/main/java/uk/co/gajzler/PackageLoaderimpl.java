@@ -10,6 +10,7 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import uk.co.gajzler.annotations.Bean;
 import uk.co.gajzler.log.SLogger;
+import uk.co.gajzler.proxy.PackageLoader;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -19,26 +20,28 @@ import java.util.Set;
 /**
  * Created by Kuba on 24/04/15.
  */
-public class PackageLoader {
+public class PackageLoaderImpl implements PackageLoader{
 
-    private static final SLogger log = SLogger.getLogger(PackageLoader.class);
+    private static final SLogger log = SLogger.getLogger(PackageLoaderImpl.class);
 
     private List<ClassLoader> classLoadersList;
-    private Map<String, Class> scannedClasses;
+    private Map<String, Class<?>> scannedClasses;
 
-    public PackageLoader() {
+    public PackageLoaderImpl() {
         scannedClasses = Maps.newHashMap();
         classLoadersList = Lists.newLinkedList();
         classLoadersList.add(ClasspathHelper.contextClassLoader());
         classLoadersList.add(ClasspathHelper.staticClassLoader());
     }
 
+    @Override
     public void addPackage(String packageName) {
         log.info("Add package to scan : {0}", packageName);
         findBeans(packageName);
     }
 
-    public Map<String, Class> getMap() {
+    @Override
+    public Map<String, Class<?>> getMap() {
         return scannedClasses;
     }
 

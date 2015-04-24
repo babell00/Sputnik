@@ -10,11 +10,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class BeanContainerImpl implements BeanContainer{
+public class BeanContainerImpl implements BeanContainer {
 
     private static final SLogger log = SLogger.getLogger(BeanContainerImpl.class);
 
-    private Map<String, Class> noInstantiatedBeans;
+    private Map<String, Class<?>> noInstantiatedBeans;
     private Map<String, Object> instantiatedBeans;
 
     public BeanContainerImpl() {
@@ -24,19 +24,19 @@ public class BeanContainerImpl implements BeanContainer{
     }
 
     @Override
-    public void addBean(Class beanClass) {
+    public void addBean(Class<?> beanClass) {
         log.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanClass.getSimpleName(), beanClass);
     }
 
     @Override
-    public void addBean(String beanName, Class beanClass) {
+    public void addBean(String beanName, Class<?> beanClass) {
         log.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanName, beanClass);
     }
 
     @Override
-    public void addBeans(Map<String, Class> beanClass) {
+    public void addBeans(Map<String, Class<?>> beanClass) {
         log.debug("Registering beans : {0}", beanClass.size());
         noInstantiatedBeans.putAll(beanClass);
     }
@@ -66,7 +66,7 @@ public class BeanContainerImpl implements BeanContainer{
             beanObject = instantiatedBeans.get(beanName);
         } else {
             log.debug("Loading bean : {0} from noInstantiatedBeans", beanName);
-            Class clazz = noInstantiatedBeans.get(beanName);
+            Class<?> clazz = noInstantiatedBeans.get(beanName);
             if (clazz != null) {
                 log.debug("Creating instance of bean : {0}", beanName);
                 try {
@@ -88,12 +88,11 @@ public class BeanContainerImpl implements BeanContainer{
         instantiatedBeans.put(beanName, object);
     }
 
-    private class AsteriskFunction implements Function {
-
+    private class AsteriskFunction implements Function<String, String> {
         @Nullable
         @Override
-        public Object apply(Object o) {
-            String name = (String) o;
+        public String apply(String o) {
+            String name = o;
             return "*" + name;
         }
     }
