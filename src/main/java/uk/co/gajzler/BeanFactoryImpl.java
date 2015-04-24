@@ -4,14 +4,13 @@ import uk.co.gajzler.annotations.InjectBean;
 import uk.co.gajzler.container.BeanContainer;
 import uk.co.gajzler.container.BeanContainerImpl;
 import uk.co.gajzler.log.SLogger;
-import uk.co.gajzler.proxy.PackageLoader;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 public class BeanFactoryImpl implements BeanFactory {
 
-    private static final SLogger log = SLogger.getLogger(BeanFactoryImpl.class);
+    private static final SLogger LOG = SLogger.getLogger(BeanFactoryImpl.class);
 
     private static final BeanFactoryImpl INSTANCE = new BeanFactoryImpl();
     private PackageLoader packageLoader;
@@ -42,10 +41,10 @@ public class BeanFactoryImpl implements BeanFactory {
             try {
                 next.set(ob, beanContainer.getBean(myInject.beanName()));
             } catch (IllegalAccessException e) {
-                log.error("{0}", e);
+                LOG.error("{0}", e);
             }
         }
-        log.info("Getting bean : {0}", ob.getClass().getName());
+        LOG.info("Getting bean : {0}", ob.getClass().getName());
         return ob;
     }
 

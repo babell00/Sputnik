@@ -11,9 +11,6 @@ public class SLogger {
         this.log = Logger.getLogger(clazz);
     }
 
-    private SLogger(String name) {
-        this.log = Logger.getLogger(name);
-    }
 
     public static SLogger getLogger(Class<?> clazz) {
         return new SLogger(clazz);

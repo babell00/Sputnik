@@ -1,4 +1,4 @@
-package uk.co.gajzler.proxy;
+package uk.co.gajzler;
 
 import java.util.Map;
 
@@ -7,5 +7,5 @@ import java.util.Map;
  */
 public interface PackageLoader {
     public void addPackage(String packageName);
-    public Map<String, Class<?>> getMap();
+    public Map<String, Class> getMap();
 }

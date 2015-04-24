@@ -12,32 +12,32 @@ import java.util.Map;
 
 public class BeanContainerImpl implements BeanContainer {
 
-    private static final SLogger log = SLogger.getLogger(BeanContainerImpl.class);
+    private static final SLogger LOG = SLogger.getLogger(BeanContainerImpl.class);
 
     private Map<String, Class<?>> noInstantiatedBeans;
     private Map<String, Object> instantiatedBeans;
 
     public BeanContainerImpl() {
-        log.info("Initializing bean container");
+        LOG.info("Initializing bean container");
         noInstantiatedBeans = Maps.newHashMap();
         instantiatedBeans = Maps.newHashMap();
     }
 
     @Override
     public void addBean(Class<?> beanClass) {
-        log.info("Registering bean : {0}", beanClass);
+        LOG.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanClass.getSimpleName(), beanClass);
     }
 
     @Override
     public void addBean(String beanName, Class<?> beanClass) {
-        log.info("Registering bean : {0}", beanClass);
+        LOG.info("Registering bean : {0}", beanClass);
         noInstantiatedBeans.put(beanName, beanClass);
     }
 
     @Override
     public void addBeans(Map<String, Class<?>> beanClass) {
-        log.debug("Registering beans : {0}", beanClass.size());
+        LOG.debug("Registering beans : {0}", beanClass.size());
         noInstantiatedBeans.putAll(beanClass);
     }
 
@@ -45,7 +45,7 @@ public class BeanContainerImpl implements BeanContainer {
     public Object getBean(String beanName) {
         Object object = findBean(beanName);
         if (object == null) {
-            log.error("Cannot find bean in bean container");
+            LOG.error("Cannot find bean in bean container");
             throw new NoBeanFoundException();
         }
         return object;
@@ -62,20 +62,20 @@ public class BeanContainerImpl implements BeanContainer {
     private Object findBean(String beanName) {
         Object beanObject = null;
         if (instantiatedBeans.containsKey(beanName)) {
-            log.debug("Loading bean : {0} from instantiatedBeans", beanName);
+            LOG.debug("Loading bean : {0} from instantiatedBeans", beanName);
             beanObject = instantiatedBeans.get(beanName);
         } else {
-            log.debug("Loading bean : {0} from noInstantiatedBeans", beanName);
+            LOG.debug("Loading bean : {0} from noInstantiatedBeans", beanName);
             Class<?> clazz = noInstantiatedBeans.get(beanName);
             if (clazz != null) {
-                log.debug("Creating instance of bean : {0}", beanName);
+                LOG.debug("Creating instance of bean : {0}", beanName);
                 try {
                     beanObject = clazz.newInstance();
                     moveBeanToInstantiatedBeans(beanName, beanObject);
                 } catch (InstantiationException e) {
-                    log.error("{0}", e);
+                    LOG.error("{0}", e);
                 } catch (IllegalAccessException e) {
-                    log.error("{0}", e);
+                    LOG.error("{0}", e);
                 }
             }
         }
@@ -83,7 +83,7 @@ public class BeanContainerImpl implements BeanContainer {
     }
 
     private void moveBeanToInstantiatedBeans(String beanName, Object object) {
-        log.debug("Moving bean : {0} from noInstantiatedBeans to instantiatedBeans", beanName);
+        LOG.debug("Moving bean : {0} from noInstantiatedBeans to instantiatedBeans", beanName);
         noInstantiatedBeans.remove(beanName);
         instantiatedBeans.put(beanName, object);
     }
