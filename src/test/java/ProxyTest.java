@@ -13,12 +13,7 @@ public class ProxyTest {
         BeanFactory bf = BeanFactoryImpl.getBeanFactory();
         bf.addPackageToScan("s");
         bf.addPackageToScan("uk.co.gajzler");
-        bf.addPackageToScan("uk.co.dupa");
-        bf.addPackageToScan("uk.co.gajzler");
-        bf.addPackageToScan("pl.com.kuba");
-        bf.addPackageToScan("uk.co.gajzler");
-        bf.addPackageToScan("uk.co.gajzler");
-        bf.addPackageToScan("uk.co.gajzler");
+        
 
 
         System.out.println(bf.registeredBeans());
