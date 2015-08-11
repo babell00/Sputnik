@@ -13,8 +13,25 @@ public class ProxyTest {
         BeanFactory bf = BeanFactoryImpl.getBeanFactory();
         bf.addPackageToScan("s");
         bf.addPackageToScan("uk.co.gajzler");
+<<<<<<< HEAD
 
 
+=======
+        bf.addPackageToScan("uk.co.dupa");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.com.kuba");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.gajzler");
+        bf.addPackageToScan("uk.co.dupa");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.com.kuba");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.gajzler");
+>>>>>>> test
 
         System.out.println(bf.registeredBeans());
         Calculator cal1 = (Calculator) bf.getBean("Add");
