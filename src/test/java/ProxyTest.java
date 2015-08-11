@@ -20,6 +20,13 @@ public class ProxyTest {
         bf.addPackageToScan("uk.co.gajzler");
         bf.addPackageToScan("uk.co.gajzler");
         bf.addPackageToScan("pl.gajzler");
+        bf.addPackageToScan("uk.co.dupa");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.com.kuba");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("uk.co.gajzler");
+        bf.addPackageToScan("pl.gajzler");
 
         System.out.println(bf.registeredBeans());
         Calculator cal1 = (Calculator) bf.getBean("Add");
